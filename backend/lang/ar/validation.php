@@ -41,6 +41,7 @@ return [
     'doesnt_end_with' => 'يجب ألا ينتهي :attribute بأي من القيم التالية: :values.',
     'doesnt_start_with' => 'يجب ألا يبدأ :attribute بأي من القيم التالية: :values.',
     'email' => 'يجب أن يكون :attribute عنوان بريد إلكتروني صالحًا.',
+    'encoding' => 'يجب أن يكون :attribute بترميز :encoding.',
     'ends_with' => 'يجب أن ينتهي :attribute بإحدى القيم التالية: :values.',
     'enum' => 'القيمة المحددة لـ :attribute غير صالحة.',
     'exists' => 'القيمة المحددة لـ :attribute غير صالحة.',

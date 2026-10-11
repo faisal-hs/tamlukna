@@ -25,9 +25,11 @@
 - Host PHP lacks the `redis` extension; the Docker image provides it.
 
 ## Decisions pending owner approval
-- Laravel 12 (per brief) vs Laravel 13 (12 is in its security-fixes-only window).
 - Decisions 1–10 from the initial plan (permissions package, OpenAPI tool, Larastan,
   PHPUnit, auth strategy, bilingual columns, spatial design, money type, public reference
   format, city/district data source).
-- Default API locale (currently `en`; `ar` and `en` both supported via Accept-Language).
 - Arabic field-level validation messages: write `lang/ar/validation.php` ourselves vs. a package such as `laravel-lang/lang`.
+
+## Decisions made
+- Laravel 12 retained (owner decision, 2026-10-11). Laravel 12 security fixes end ~Feb 2027 — plan an upgrade before then.
+- Default API locale: Arabic (`ar`); English via `Accept-Language: en`; missing translations fall back to `en`.

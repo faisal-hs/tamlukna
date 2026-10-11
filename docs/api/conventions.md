@@ -48,7 +48,7 @@ Query: `page` (≥1), `per_page` (1–50, default 15).
 ## Localization
 
 Send `Accept-Language: ar` or `en` (regional variants such as `ar-SA` are accepted).
-The response includes `Content-Language`. Unsupported languages fall back to the default locale.
+The response includes `Content-Language`. Without the header, or for unsupported languages, the default locale `ar` is used.
 
 ## Request IDs
 

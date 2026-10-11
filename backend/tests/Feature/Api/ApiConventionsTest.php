@@ -38,7 +38,7 @@ final class ApiConventionsTest extends TestCase
 
     public function test_validation_errors_use_the_standard_envelope(): void
     {
-        $this->postJson('/api/v1/__test/validation', [])
+        $this->withHeaders(['Accept-Language' => 'en'])->postJson('/api/v1/__test/validation', [])
             ->assertStatus(422)
             ->assertJsonPath('success', false)
             ->assertJsonPath('code', 'validation_failed')
@@ -83,7 +83,7 @@ final class ApiConventionsTest extends TestCase
     {
         config(['app.debug' => false]);
 
-        $this->getJson('/api/v1/__test/boom')
+        $this->withHeaders(['Accept-Language' => 'en'])->getJson('/api/v1/__test/boom')
             ->assertStatus(500)
             ->assertJsonPath('code', 'server_error')
             ->assertJsonPath('message', 'An unexpected error occurred.')

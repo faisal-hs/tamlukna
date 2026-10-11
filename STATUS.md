@@ -28,8 +28,8 @@
 - Decisions 1–10 from the initial plan (permissions package, OpenAPI tool, Larastan,
   PHPUnit, auth strategy, bilingual columns, spatial design, money type, public reference
   format, city/district data source).
-- Arabic field-level validation messages: write `lang/ar/validation.php` ourselves vs. a package such as `laravel-lang/lang`.
 
 ## Decisions made
 - Laravel 12 retained (owner decision, 2026-10-11). Laravel 12 security fixes end ~Feb 2027 — plan an upgrade before then.
 - Default API locale: Arabic (`ar`); English via `Accept-Language: en`; missing translations fall back to `en`.
+- Arabic validation messages: maintained in-repo (`backend/lang/ar/validation.php`); no translation package. Guard tests enforce key coverage and placeholder parity with the framework's English file.

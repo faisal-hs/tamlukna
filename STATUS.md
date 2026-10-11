@@ -8,7 +8,7 @@
 - [x] Step 2 — Git repository initialized; Laravel 12 skeleton installed in `backend/`
 
 ## Planned (Phase 1)
-- [ ] Step 3 — Docker Compose: PHP 8.4-FPM, nginx, MySQL 8, MySQL test DB, Redis
+- [x] Step 3 — Docker Compose: PHP 8.4-FPM, nginx, MySQL 8, MySQL test DB, Redis
 - [ ] Step 4 — API foundation: /api/v1, response envelope, exceptions, pagination, health, CORS, logging
 - [ ] Step 5 — Authentication (Sanctum) and account status
 - [ ] Step 6 — Roles and permissions

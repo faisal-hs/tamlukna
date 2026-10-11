@@ -1,0 +1,14 @@
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Local Docker volumes / data (if any are bind-mounted later)
+infra/docker/data/

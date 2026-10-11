@@ -9,7 +9,7 @@
 
 ## Planned (Phase 1)
 - [x] Step 3 — Docker Compose: PHP 8.4-FPM, nginx, MySQL 8, MySQL test DB, Redis
-- [ ] Step 4 — API foundation: /api/v1, response envelope, exceptions, pagination, health, CORS, logging
+- [x] Step 4 — API foundation: /api/v1, response envelope, exceptions, pagination, health, CORS, logging
 - [ ] Step 5 — Authentication (Sanctum) and account status
 - [ ] Step 6 — Roles and permissions
 - [ ] Step 7 — Database schema and documentation
@@ -29,3 +29,5 @@
 - Decisions 1–10 from the initial plan (permissions package, OpenAPI tool, Larastan,
   PHPUnit, auth strategy, bilingual columns, spatial design, money type, public reference
   format, city/district data source).
+- Default API locale (currently `en`; `ar` and `en` both supported via Accept-Language).
+- Arabic field-level validation messages: write `lang/ar/validation.php` ourselves vs. a package such as `laravel-lang/lang`.

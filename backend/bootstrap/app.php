@@ -17,10 +17,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(prepend: [
+        // Global (runs before routing): responses to unmatched routes and wrong
+        // HTTP methods (404/405) also carry X-Request-Id and Content-Language.
+        $middleware->prepend([
             AssignRequestId::class,
-            ForceJsonResponse::class,
             SetLocaleFromHeader::class,
+        ]);
+
+        $middleware->api(prepend: [
+            ForceJsonResponse::class,
         ]);
 
         // Uses the "api" limiter defined in AppServiceProvider.

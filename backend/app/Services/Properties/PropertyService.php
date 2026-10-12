@@ -3,6 +3,7 @@
 namespace App\Services\Properties;
 
 use App\Enums\ListingStatus;
+use App\Enums\PropertyPurpose;
 use App\Exceptions\Api\ListingNotEditableException;
 use App\Models\Property;
 use App\Models\PropertyStatusHistory;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Listing content: create, edit, delete. Status changes go through ListingWorkflow.
  * Only fillable content fields are ever taken from input; fields that do not
- * apply to the property type are cleared. Authorization is the caller's job.
+ * apply to the property type or purpose are cleared. Authorization is the caller's job.
  */
 final class PropertyService
 {
@@ -40,7 +41,7 @@ final class PropertyService
 
             $property = new Property;
             $property->fill($this->contentOnly($data));
-            $property->forceFill($this->clearedFieldsFor($type));
+            $property->forceFill($this->clearedFields($type, $property->purpose));
             $property->forceFill(['advertiser_id' => $advertiser->id, 'status' => ListingStatus::Draft]);
             $property->save();
 
@@ -78,7 +79,7 @@ final class PropertyService
 
             $locked->fill($this->contentOnly($data));
             $type = PropertyType::query()->findOrFail($locked->property_type_id);
-            $locked->forceFill($this->clearedFieldsFor($type));
+            $locked->forceFill($this->clearedFields($type, $locked->purpose));
 
             $changedFields = array_keys($locked->getDirty());
             $locked->save();
@@ -125,11 +126,12 @@ final class PropertyService
     /**
      * @return array<string, null>
      */
-    private function clearedFieldsFor(PropertyType $type): array
+    private function clearedFields(PropertyType $type, ?PropertyPurpose $purpose): array
     {
         $fields = array_merge(
             $type->allows_rooms ? [] : self::ROOM_FIELDS,
             $type->allows_building_details ? [] : self::BUILDING_FIELDS,
+            $purpose === PropertyPurpose::Rent ? [] : ['rent_period'],
         );
 
         return array_fill_keys($fields, null);

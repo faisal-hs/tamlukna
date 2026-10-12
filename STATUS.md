@@ -14,7 +14,8 @@
 - [x] Step 6 — Roles and permissions (spatie): enum-defined roles/permissions, idempotent seeder, default role at registration, users:assign-role CLI
 - [x] Step 7.1 — Locations (13 regions, sample cities/districts), catalog (types/features), immutable audit log, morph aliases
 - [ ] Step 7.2 — Properties (spatial), media, status history, factories, local sample listings, schema docs
-- [ ] Step 8 — Property domain and state machine
+- [x] Step 8.1 — Listing lifecycle (named transitions, row locks, history + audit), completeness rules, PropertyPolicy, PropertyService, hourly expiry, district required (composite FK)
+- [x] Step 8.2 — Property APIs: create, show (public/optional auth), update, delete, submit/pause/resume, history, my listings
 - [ ] Step 9 — Media storage and validation
 - [ ] Step 10 — Search, filters, spatial radius queries
 - [ ] Step 11 — Minimal moderation command (testing only)
@@ -37,3 +38,5 @@ All decisions to date: [docs/decisions/0001-phase-1-foundation.md](docs/decision
 - Default Laravel email layout is LTR; RTL email theme planned for Phase 3 notifications.
 - ADR 0002 (roles and self-registration rules) is **Proposed** — awaiting owner approval.
 - Role changes via CLI are logged to the application log only; persistent audit records arrive in Step 7.
+- District is required: until a licensed district dataset is loaded, listings can only be created in cities that have districts (sample: Riyadh, Jeddah).
+- Privacy defaults to confirm: coordinates and advertiser name are public; exact address is advertiser-only; contact details never public.

@@ -5,7 +5,14 @@ use App\Http\Controllers\Api\V1\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\V1\Auth\PasswordResetController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\MeController;
+use App\Http\Controllers\Api\V1\Properties\MyPropertyController;
+use App\Http\Controllers\Api\V1\Properties\PropertyController;
+use App\Http\Controllers\Api\V1\Properties\PropertyHistoryController;
+use App\Http\Controllers\Api\V1\Properties\PropertyStatusController;
 use Illuminate\Support\Facades\Route;
+
+// Listing references only (TML-XXXXXXXX); anything else falls through to the JSON 404.
+Route::pattern('property', 'TML-[0-9A-HJKMNP-TV-Z]{8}');
 
 Route::get('health', HealthController::class)->name('health');
 
@@ -32,6 +39,19 @@ Route::prefix('auth')->name('auth.')->group(function (): void {
     });
 });
 
+// Public (optional bearer token): listing details.
+Route::get('properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+
 Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
     Route::get('me', MeController::class)->name('me');
+    Route::get('me/properties', MyPropertyController::class)->name('me.properties');
+
+    Route::post('properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::patch('properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
+    Route::delete('properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
+
+    Route::post('properties/{property}/submit', [PropertyStatusController::class, 'submit'])->name('properties.submit');
+    Route::post('properties/{property}/pause', [PropertyStatusController::class, 'pause'])->name('properties.pause');
+    Route::post('properties/{property}/resume', [PropertyStatusController::class, 'resume'])->name('properties.resume');
+    Route::get('properties/{property}/history', PropertyHistoryController::class)->name('properties.history');
 });

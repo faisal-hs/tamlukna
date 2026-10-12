@@ -20,6 +20,15 @@ return [
         'verification_sent' => 'A new verification link will be sent to your email address.',
     ],
 
+    'properties' => [
+        'created' => 'Listing created as a draft.',
+        'updated' => 'Listing updated.',
+        'deleted' => 'Listing deleted.',
+        'submitted' => 'Listing submitted for review.',
+        'paused' => 'Listing paused.',
+        'resumed' => 'Listing is live again.',
+    ],
+
     'errors' => [
         'bad_request' => 'The request is invalid.',
         'validation_failed' => 'The given data was invalid.',

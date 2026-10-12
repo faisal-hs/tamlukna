@@ -1,6 +1,6 @@
 # ADR 0003 — Property schema
 
-- **Status:** Accepted for Phase 1 (open questions listed below)
+- **Status:** Accepted (open questions resolved by the owner on 2026-10-12)
 - **Scope:** Step 7.2. Validated on MySQL 8.0.46 (sandbox) and by the test suite on MySQL 8.4.
 
 | # | Decision | Rationale |
@@ -17,7 +17,7 @@
 | 10 | Original upload file names are not stored | They can contain personal data and are not needed. |
 | 11 | `purpose` is `sale` or `rent` (+ `rent_period`) | See open question 1. |
 
-## Open questions (owner input needed, Step 8)
-1. Should **investment** listings be a separate purpose, a flag, or out of scope?
-2. Is a **district** required for every listing, or optional (e.g. land outside districts)?
-3. Must an **advertising licence number** be provided before a listing can be submitted for review?
+## Resolved questions (owner decision, 2026-10-12)
+1. **Investment listings:** out of scope for now.
+2. **District:** required, and it must belong to the listing's city (composite foreign key, Step 8.1).
+3. **Advertising licence number:** optional, stored when provided; not verified.

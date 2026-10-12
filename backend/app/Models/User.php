@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\AccountStatus;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,7 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasUlids, Notifiable;
@@ -69,6 +71,14 @@ class User extends Authenticatable
     public function uniqueIds(): array
     {
         return ['public_id'];
+    }
+
+    /**
+     * Notifications (verification, password reset) are sent in this language.
+     */
+    public function preferredLocale(): string
+    {
+        return $this->preferred_locale;
     }
 
     /**

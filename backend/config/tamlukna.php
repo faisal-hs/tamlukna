@@ -17,4 +17,13 @@ return [
         'auth_per_minute' => (int) env('AUTH_RATE_LIMIT_PER_MINUTE', 10),
     ],
 
+    'frontend' => [
+        // Page (website or app deep link) that shows the "choose a new password" form.
+        // {token} and {email} are replaced (URL-encoded) when the email is sent.
+        'password_reset_url' => env(
+            'FRONTEND_PASSWORD_RESET_URL',
+            'http://localhost:3000/reset-password?token={token}&email={email}'
+        ),
+    ],
+
 ];

@@ -13,6 +13,11 @@ return [
         'logged_in' => 'Logged in successfully.',
         'logged_out' => 'Logged out successfully.',
         'logged_out_all' => 'Logged out from all devices.',
+        'reset_link_sent' => 'If an account exists for this email address, a password reset link will be sent to it.',
+        'password_reset' => 'Your password has been reset. Please log in again.',
+        'email_verified' => 'Your email address has been verified.',
+        'email_already_verified' => 'Your email address is already verified.',
+        'verification_sent' => 'A new verification link will be sent to your email address.',
     ],
 
     'errors' => [
@@ -21,6 +26,7 @@ return [
         'unauthenticated' => 'Authentication is required.',
         'forbidden' => 'You are not allowed to perform this action.',
         'account_inactive' => 'This account is not active. Please contact support.',
+        'invalid_verification_link' => 'This verification link is invalid or has expired.',
         'not_found' => 'The requested resource was not found.',
         'method_not_allowed' => 'This HTTP method is not allowed for this endpoint.',
         'conflict' => 'The request conflicts with the current state of the resource.',

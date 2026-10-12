@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -22,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureEloquent();
         $this->configureRateLimiting();
         $this->configurePasswordRules();
+        $this->configureAuthLinks();
     }
 
     /**
@@ -53,8 +58,8 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute((int) config('tamlukna.rate_limits.api_per_minute', 60))->by($key);
         });
 
-        // Registration and login, per IP. Login also has a per-email lockout
-        // in AuthenticationService.
+        // Unauthenticated auth endpoints, per IP. Login also has a per-email
+        // lockout in AuthenticationService.
         RateLimiter::for('auth', function (Request $request): Limit {
             return Limit::perMinute((int) config('tamlukna.rate_limits.auth_per_minute', 10))->by('ip:'.$request->ip());
         });
@@ -70,6 +75,31 @@ class AppServiceProvider extends ServiceProvider
             $rule = Password::min(8)->letters()->numbers();
 
             return $this->app->isProduction() ? $rule->uncompromised() : $rule;
+        });
+    }
+
+    /**
+     * Verification links use the public ULID (never the internal ID) and point
+     * at the API. Password reset links point at the configurable frontend page.
+     */
+    private function configureAuthLinks(): void
+    {
+        VerifyEmail::createUrlUsing(function (User $notifiable): string {
+            return URL::temporarySignedRoute(
+                'api.v1.auth.verification.verify',
+                now()->addMinutes((int) config('auth.verification.expire', 60)),
+                [
+                    'id' => $notifiable->public_id,
+                    'hash' => sha1($notifiable->getEmailForVerification()),
+                ],
+            );
+        });
+
+        ResetPassword::createUrlUsing(function (User $notifiable, string $token): string {
+            return strtr((string) config('tamlukna.frontend.password_reset_url'), [
+                '{token}' => urlencode($token),
+                '{email}' => urlencode($notifiable->getEmailForPasswordReset()),
+            ]);
         });
     }
 }

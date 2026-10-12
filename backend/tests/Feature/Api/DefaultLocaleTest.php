@@ -17,4 +17,16 @@ final class DefaultLocaleTest extends TestCase
             ->assertJsonPath('message', 'المورد المطلوب غير موجود.')
             ->assertHeader('Content-Language', 'ar');
     }
+
+    public function test_default_stays_arabic_after_a_request_in_another_language(): void
+    {
+        $this->withHeaders(['Accept-Language' => 'en'])
+            ->getJson('/api/v1/definitely-not-a-route')
+            ->assertHeader('Content-Language', 'en');
+
+        $this->withHeaders(['Accept-Language' => ''])
+            ->getJson('/api/v1/definitely-not-a-route')
+            ->assertHeader('Content-Language', 'ar')
+            ->assertJsonPath('message', 'المورد المطلوب غير موجود.');
+    }
 }

@@ -17,24 +17,57 @@ final class EmailVerificationTest extends TestCase
         return (new VerifyEmail)->toMail($user)->actionUrl;
     }
 
-    public function test_registration_sends_a_verification_email_in_the_users_language(): void
+    /**
+     * @return array<string, string>
+     */
+    private function registration(string $email): array
+    {
+        return [
+            'name' => 'New User',
+            'email' => $email,
+            'password' => 'secret123A',
+            'password_confirmation' => 'secret123A',
+        ];
+    }
+
+    public function test_registration_sends_the_verification_email_in_the_request_language(): void
     {
         Notification::fake();
 
-        $this->postJson('/api/v1/auth/register', [
-            'name' => 'New User',
-            'email' => 'new@example.com',
-            'password' => 'secret123A',
-            'password_confirmation' => 'secret123A',
-        ])->assertCreated();
+        $this->withHeaders(['Accept-Language' => ''])
+            ->postJson('/api/v1/auth/register', $this->registration('arabic@example.com'))
+            ->assertCreated();
+        $this->withHeaders(['Accept-Language' => 'en'])
+            ->postJson('/api/v1/auth/register', $this->registration('english@example.com'))
+            ->assertCreated();
 
-        $user = User::query()->where('email', 'new@example.com')->firstOrFail();
+        $arabic = User::query()->where('email', 'arabic@example.com')->firstOrFail();
+        $english = User::query()->where('email', 'english@example.com')->firstOrFail();
 
-        Notification::assertSentTo(
-            $user,
-            VerifyEmail::class,
-            fn ($notification, array $channels, User $notifiable, ?string $locale): bool => $locale === 'ar'
-        );
+        $this->assertSame('ar', $arabic->preferred_locale);
+        $this->assertSame('en', $english->preferred_locale);
+
+        Notification::assertSentTo($arabic, VerifyEmail::class,
+            fn ($notification, array $channels, User $notifiable, ?string $locale): bool => $locale === 'ar');
+        Notification::assertSentTo($english, VerifyEmail::class,
+            fn ($notification, array $channels, User $notifiable, ?string $locale): bool => $locale === 'en');
+    }
+
+    public function test_verification_links_use_app_url_even_with_a_forged_host_header(): void
+    {
+        Notification::fake();
+
+        $this->postJson('http://evil.example/api/v1/auth/register', $this->registration('victim@example.com'))
+            ->assertCreated();
+
+        $user = User::query()->where('email', 'victim@example.com')->firstOrFail();
+
+        Notification::assertSentTo($user, VerifyEmail::class, function (VerifyEmail $notification) use ($user): bool {
+            $url = $notification->toMail($user)->actionUrl;
+
+            return str_starts_with($url, rtrim((string) config('app.url'), '/').'/')
+                && ! str_contains($url, 'evil.example');
+        });
     }
 
     public function test_signed_link_verifies_the_email_using_the_public_id(): void

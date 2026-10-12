@@ -6,11 +6,13 @@ use App\Exceptions\Api\AccountInactiveException;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\Contracts\HasAbilities;
 use Laravel\Sanctum\PersonalAccessToken;
 
 final class AuthenticationService
@@ -20,7 +22,8 @@ final class AuthenticationService
     private const LOCKOUT_SECONDS = 60;
 
     /**
-     * Creates the account and its first token atomically.
+     * Creates the account and its first token atomically. Without an explicit
+     * preferred_locale, the language of the registration request is used.
      *
      * @param  array<string, mixed>  $data  Validated registration data
      */
@@ -32,7 +35,7 @@ final class AuthenticationService
                 'email' => (string) $data['email'],
                 'password' => (string) $data['password'],
                 'phone' => isset($data['phone']) ? (string) $data['phone'] : null,
-                'preferred_locale' => (string) ($data['preferred_locale'] ?? config('app.locale')),
+                'preferred_locale' => (string) ($data['preferred_locale'] ?? App::getLocale()),
             ]);
 
             return $this->issueToken($user->refresh(), $deviceName);
@@ -81,6 +84,9 @@ final class AuthenticationService
 
     public function revokeCurrentToken(User $user): void
     {
+        // A PersonalAccessToken for bearer tokens; a TransientToken once SPA cookie
+        // mode is enabled (that case is handled by ending the session instead).
+        /** @var HasAbilities|null $token */
         $token = $user->currentAccessToken();
 
         if ($token instanceof PersonalAccessToken) {

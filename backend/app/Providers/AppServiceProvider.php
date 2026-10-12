@@ -23,10 +23,31 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->configureUrls();
         $this->configureEloquent();
         $this->configureRateLimiting();
         $this->configurePasswordRules();
         $this->configureAuthLinks();
+    }
+
+    /**
+     * Generated absolute URLs (e.g. signed verification links) always use APP_URL,
+     * never the client-supplied Host header. This prevents Host-header injection
+     * into emailed links.
+     */
+    private function configureUrls(): void
+    {
+        $root = (string) config('app.url');
+
+        if ($root === '') {
+            return;
+        }
+
+        URL::forceRootUrl($root);
+
+        if (str_starts_with($root, 'https://')) {
+            URL::forceScheme('https');
+        }
     }
 
     /**

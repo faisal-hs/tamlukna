@@ -44,6 +44,7 @@ final class ApiResponse
     }
 
     /**
+     * @param  LengthAwarePaginator<int, mixed>  $paginator
      * @param  class-string<JsonResource>  $resource
      * @param  array<string, mixed>  $meta
      */

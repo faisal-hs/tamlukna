@@ -3,8 +3,10 @@
 return [
 
     'locales' => [
-        // Order is irrelevant; the fallback is config('app.locale').
+        // Locales accepted from Accept-Language.
         'supported' => ['ar', 'en'],
+        // Stable default. Not config('app.locale'): App::setLocale() overwrites that at runtime.
+        'default' => env('APP_LOCALE', 'ar'),
     ],
 
     'pagination' => [

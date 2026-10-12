@@ -28,4 +28,19 @@ return [
         ),
     ],
 
+    'listings' => [
+        // A published listing expires this many days after (re-)approval.
+        'duration_days' => (int) env('LISTING_DURATION_DAYS', 90),
+    ],
+
+    'geo' => [
+        // Approximate bounding box of Saudi Arabia; listing coordinates must fall inside.
+        'saudi_bounds' => [
+            'min_lat' => 16.0,
+            'max_lat' => 32.5,
+            'min_lng' => 34.0,
+            'max_lng' => 56.0,
+        ],
+    ],
+
 ];

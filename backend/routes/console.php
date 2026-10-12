@@ -7,3 +7,4 @@ use Illuminate\Support\Facades\Schedule;
  * every minute (cron or a scheduler container — to be added before production).
  */
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
+Schedule::command('listings:expire')->hourly()->withoutOverlapping();

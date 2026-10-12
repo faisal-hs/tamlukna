@@ -11,6 +11,7 @@ use App\Enums\RentPeriod;
 use App\Enums\Role;
 use App\Enums\VerificationStatus;
 use App\Models\City;
+use App\Models\District;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
@@ -43,7 +44,7 @@ class PropertyFactory extends Factory
             'description_ar' => 'بيانات تجريبية لأغراض التطوير والاختبار فقط، ولا تمثل عقارًا حقيقيًا.',
             'description_en' => 'Sample data for development and testing only; not a real property.',
             'city_id' => City::factory(),
-            'district_id' => null,
+            'district_id' => fn (array $attributes) => District::factory()->create(['city_id' => $attributes['city_id']])->id,
             'address_line' => null,
             'latitude' => fake()->randomFloat(7, 24.60, 24.90),
             'longitude' => fake()->randomFloat(7, 46.50, 46.90),

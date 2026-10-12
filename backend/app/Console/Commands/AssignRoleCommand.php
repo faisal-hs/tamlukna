@@ -4,8 +4,9 @@ namespace App\Console\Commands;
 
 use App\Enums\Role;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -19,9 +20,9 @@ final class AssignRoleCommand extends Command
         {role : buyer, renter, owner, broker, developer, staff or admin}
         {--revoke : Remove the role instead of assigning it}';
 
-    protected $description = 'Assign or revoke a platform role (server-side only)';
+    protected $description = 'Assign or revoke a platform role (server-side only, audited)';
 
-    public function handle(): int
+    public function handle(AuditLogger $audit): int
     {
         $role = Role::tryFrom((string) $this->argument('role'));
 
@@ -40,14 +41,17 @@ final class AssignRoleCommand extends Command
         }
 
         $revoke = (bool) $this->option('revoke');
-        $revoke ? $user->removeRole($role->value) : $user->assignRole($role->value);
 
-        // Persistent audit records arrive with the audit table in Step 7.
-        Log::info('Role changed via CLI', [
-            'user' => $user->public_id,
-            'role' => $role->value,
-            'action' => $revoke ? 'revoked' : 'assigned',
-        ]);
+        DB::transaction(function () use ($audit, $user, $role, $revoke): void {
+            $revoke ? $user->removeRole($role->value) : $user->assignRole($role->value);
+
+            $audit->record(
+                action: $revoke ? 'user.role_revoked' : 'user.role_assigned',
+                subject: $user,
+                changes: ['role' => $role->value],
+                source: 'cli',
+            );
+        });
 
         $this->info(sprintf('%s role "%s" %s %s.', $revoke ? 'Revoked' : 'Assigned', $role->value, $revoke ? 'from' : 'to', $user->email));
 

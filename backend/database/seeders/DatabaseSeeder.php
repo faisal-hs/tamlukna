@@ -7,11 +7,15 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database. Development sample data arrives with
-     * the property schema (Step 7).
+     * Reference data safe for every environment. Development sample listings
+     * arrive in Step 7.2 (local environment only).
      */
     public function run(): void
     {
-        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            LocationSeeder::class,
+            CatalogSeeder::class,
+        ]);
     }
 }

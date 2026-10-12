@@ -12,7 +12,8 @@
 - [x] Step 5.1 — Sanctum token auth: register, login (throttled), logout, logout-all, /me, account status
 - [x] Step 5.2 — Password reset (revokes all tokens) and signed email verification, localized emails
 - [x] Step 6 — Roles and permissions (spatie): enum-defined roles/permissions, idempotent seeder, default role at registration, users:assign-role CLI
-- [ ] Step 7 — Database schema and documentation
+- [x] Step 7.1 — Locations (13 regions, sample cities/districts), catalog (types/features), immutable audit log, morph aliases
+- [ ] Step 7.2 — Properties (spatial), media, status history, factories, local sample listings, schema docs
 - [ ] Step 8 — Property domain and state machine
 - [ ] Step 9 — Media storage and validation
 - [ ] Step 10 — Search, filters, spatial radius queries

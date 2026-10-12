@@ -7,6 +7,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureUrls();
+        $this->configureMorphMap();
         $this->configureEloquent();
         $this->configureRateLimiting();
         $this->configurePasswordRules();
@@ -48,6 +50,18 @@ class AppServiceProvider extends ServiceProvider
         if (str_starts_with($root, 'https://')) {
             URL::forceScheme('https');
         }
+    }
+
+    /**
+     * Polymorphic columns (tokens, role assignments, audit logs) store these stable
+     * aliases instead of PHP class names. Enforced: an unmapped model fails loudly.
+     * Add new morph targets here (e.g. 'property' in Step 7.2).
+     */
+    private function configureMorphMap(): void
+    {
+        Relation::enforceMorphMap([
+            'user' => User::class,
+        ]);
     }
 
     /**

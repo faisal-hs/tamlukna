@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Property;
+use App\Models\PropertyMedia;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -55,12 +57,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Polymorphic columns (tokens, role assignments, audit logs) store these stable
      * aliases instead of PHP class names. Enforced: an unmapped model fails loudly.
-     * Add new morph targets here (e.g. 'property' in Step 7.2).
+     * Add new morph targets here.
      */
     private function configureMorphMap(): void
     {
         Relation::enforceMorphMap([
             'user' => User::class,
+            'property' => Property::class,
+            'property_media' => PropertyMedia::class,
         ]);
     }
 

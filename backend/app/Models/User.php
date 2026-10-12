@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -81,6 +82,16 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function preferredLocale(): string
     {
         return $this->preferred_locale;
+    }
+
+    /**
+     * Listings this account is responsible for as advertiser.
+     *
+     * @return HasMany<Property, $this>
+     */
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class, 'advertiser_id');
     }
 
     /**

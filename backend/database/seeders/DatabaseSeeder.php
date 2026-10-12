@@ -7,8 +7,8 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Reference data safe for every environment. Development sample listings
-     * arrive in Step 7.2 (local environment only).
+     * Reference data is safe for every environment. Sample accounts and listings
+     * are created only in the local environment.
      */
     public function run(): void
     {
@@ -17,5 +17,9 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             CatalogSeeder::class,
         ]);
+
+        if (app()->environment('local')) {
+            $this->call(SamplePropertySeeder::class);
+        }
     }
 }

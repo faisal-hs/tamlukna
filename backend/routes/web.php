@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+ * Tamlukna's backend is API-only (see routes/api.php).
+ * No browser-facing web routes are defined; Blade frontends are out of scope.
+ */

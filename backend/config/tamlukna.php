@@ -14,6 +14,7 @@ return [
 
     'rate_limits' => [
         'api_per_minute' => (int) env('API_RATE_LIMIT_PER_MINUTE', 60),
+        'auth_per_minute' => (int) env('AUTH_RATE_LIMIT_PER_MINUTE', 10),
     ],
 
 ];

@@ -9,7 +9,8 @@
 - [x] Step 3 — Docker Compose: PHP 8.4-FPM, nginx, MySQL 8.4 (+ test DB), Redis
 - [x] Step 4 — API foundation: `/api/v1`, envelope, error handling, Arabic/English (Arabic default, incl. validation), request IDs, rate limiting, CORS, health check
 - [x] Step 4.4 — API-only cleanup (Blade/Vite/Sail removed), Larastan level 6, README run guide, decision record
-- [ ] Step 5 — Authentication (Sanctum) and account status
+- [x] Step 5.1 — Sanctum token auth: register, login (throttled), logout, logout-all, /me, account status
+- [ ] Step 5.2 — Password reset and email verification
 - [ ] Step 6 — Roles and permissions
 - [ ] Step 7 — Database schema and documentation
 - [ ] Step 8 — Property domain and state machine
@@ -30,3 +31,4 @@ All decisions to date: [docs/decisions/0001-phase-1-foundation.md](docs/decision
 ## Environment notes
 - Host PHP 8.4.26 is not used to run the app; all PHP tooling runs in Docker.
 - Host `mysql` client is MariaDB 11.8 — never used for development or tests.
+- No scheduler runs yet (`schedule:run`); needed for token pruning before production.

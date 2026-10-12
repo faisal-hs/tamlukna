@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+/*
+ * Scheduled tasks. Each deployed environment must run `php artisan schedule:run`
+ * every minute (cron or a scheduler container — to be added before production).
+ */
+Schedule::command('sanctum:prune-expired --hours=24')->daily();

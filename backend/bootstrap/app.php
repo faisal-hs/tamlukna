@@ -1,7 +1,9 @@
 <?php
 
+use App\Exceptions\Api\ApiException;
 use App\Exceptions\ApiExceptionRenderer;
 use App\Http\Middleware\AssignRequestId;
+use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\SetLocaleFromHeader;
 use Illuminate\Foundation\Application;
@@ -28,10 +30,17 @@ return Application::configure(basePath: dirname(__DIR__))
             ForceJsonResponse::class,
         ]);
 
+        $middleware->alias([
+            'active' => EnsureAccountIsActive::class,
+        ]);
+
         // Uses the "api" limiter defined in AppServiceProvider.
         $middleware->throttleApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Expected business errors (e.g. inactive account) are not logged as errors.
+        $exceptions->dontReport([ApiException::class]);
+
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request, Throwable $e): bool => $request->is('api/*') || $request->expectsJson()
         );

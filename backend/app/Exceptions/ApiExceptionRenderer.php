@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Api\ApiException;
 use App\Support\Api\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -40,6 +41,12 @@ final class ApiExceptionRenderer
         }
 
         return match (true) {
+            $e instanceof ApiException => ApiResponse::error(
+                message: (string) __($e->messageKey),
+                status: $e->status,
+                code: $e->errorCode,
+                headers: $e->headers,
+            ),
             $e instanceof ValidationException => ApiResponse::error(
                 message: (string) __('api.errors.validation_failed'),
                 status: $e->status,

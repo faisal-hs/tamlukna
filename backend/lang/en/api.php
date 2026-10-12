@@ -8,11 +8,19 @@ return [
         'degraded' => 'One or more dependencies are unavailable.',
     ],
 
+    'auth' => [
+        'registered' => 'Account created successfully.',
+        'logged_in' => 'Logged in successfully.',
+        'logged_out' => 'Logged out successfully.',
+        'logged_out_all' => 'Logged out from all devices.',
+    ],
+
     'errors' => [
         'bad_request' => 'The request is invalid.',
         'validation_failed' => 'The given data was invalid.',
         'unauthenticated' => 'Authentication is required.',
         'forbidden' => 'You are not allowed to perform this action.',
+        'account_inactive' => 'This account is not active. Please contact support.',
         'not_found' => 'The requested resource was not found.',
         'method_not_allowed' => 'This HTTP method is not allowed for this endpoint.',
         'conflict' => 'The request conflicts with the current state of the resource.',

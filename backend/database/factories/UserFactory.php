@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\AccountStatus;
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -56,5 +57,13 @@ class UserFactory extends Factory
     public function deactivated(): static
     {
         return $this->state(fn (array $attributes) => ['status' => AccountStatus::Deactivated]);
+    }
+
+    /**
+     * Requires roles to exist (RolesAndPermissionsSeeder).
+     */
+    public function withRole(Role $role): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->assignRole($role->value));
     }
 }

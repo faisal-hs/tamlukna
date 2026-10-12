@@ -24,6 +24,7 @@ Send tokens as `Authorization: Bearer <access_token>`.
 Body: `name`, `email`, `password`, `password_confirmation`, optional `phone`
 (Saudi mobile, normalized to `+9665XXXXXXXX`), optional `preferred_locale`
 (`ar`|`en`), optional `device_name`.
+Optional `account_type`: `buyer` (default), `renter` or `owner` (see [authorization](../architecture/authorization.md)).
 Passwords: at least 8 characters with letters and numbers; in production, passwords
 found in known breaches are rejected.
 
@@ -92,4 +93,3 @@ frontend origins. Same guard, same user model, same authorization rules.
   left-aligned. An RTL email theme is planned with Phase 3 notifications.
 - Phone verification and phone login require an SMS provider (to be approved);
   the schema already has `phone_verified_at`.
-- Roles assigned at registration — Step 6.

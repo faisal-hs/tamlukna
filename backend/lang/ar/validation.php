@@ -170,6 +170,7 @@ return [
         'per_page' => 'عدد العناصر في الصفحة',
         'device_name' => 'اسم الجهاز',
         'preferred_locale' => 'اللغة المفضلة',
+        'account_type' => 'نوع الحساب',
     ],
 
 ];

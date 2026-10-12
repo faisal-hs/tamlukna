@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -31,11 +32,12 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasUlids, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, HasUlids, Notifiable;
 
     /**
      * "status" is deliberately not fillable: it changes only through
      * explicit, authorized workflows — never from client input.
+     * Roles are never mass-assigned either (see AuthenticationService).
      *
      * @var list<string>
      */

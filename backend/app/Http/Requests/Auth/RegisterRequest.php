@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\Role;
 use App\Support\Phone\SaudiPhone;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -26,6 +27,8 @@ final class RegisterRequest extends FormRequest
             'phone' => ['nullable', 'string', 'regex:'.SaudiPhone::PATTERN, Rule::unique('users', 'phone')],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
             'preferred_locale' => ['sometimes', 'string', Rule::in(config('tamlukna.locales.supported'))],
+            // Only low-privilege roles; never trust the client with anything else.
+            'account_type' => ['sometimes', 'string', Rule::in(Role::selfAssignableValues())],
             'device_name' => ['sometimes', 'string', 'max:100'],
         ];
     }

@@ -11,7 +11,7 @@
 - [x] Step 4.4 — API-only cleanup (Blade/Vite/Sail removed), Larastan level 6, README run guide, decision record
 - [x] Step 5.1 — Sanctum token auth: register, login (throttled), logout, logout-all, /me, account status
 - [x] Step 5.2 — Password reset (revokes all tokens) and signed email verification, localized emails
-- [ ] Step 6 — Roles and permissions
+- [x] Step 6 — Roles and permissions (spatie): enum-defined roles/permissions, idempotent seeder, default role at registration, users:assign-role CLI
 - [ ] Step 7 — Database schema and documentation
 - [ ] Step 8 — Property domain and state machine
 - [ ] Step 9 — Media storage and validation
@@ -34,3 +34,5 @@ All decisions to date: [docs/decisions/0001-phase-1-foundation.md](docs/decision
 - No scheduler runs yet (`schedule:run`); needed for token pruning before production.
 - Emails are sent synchronously; add a queue worker and queued notifications before production.
 - Default Laravel email layout is LTR; RTL email theme planned for Phase 3 notifications.
+- ADR 0002 (roles and self-registration rules) is **Proposed** — awaiting owner approval.
+- Role changes via CLI are logged to the application log only; persistent audit records arrive in Step 7.

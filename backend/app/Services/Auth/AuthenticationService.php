@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\Role;
 use App\Exceptions\Api\AccountInactiveException;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -22,8 +23,10 @@ final class AuthenticationService
     private const LOCKOUT_SECONDS = 60;
 
     /**
-     * Creates the account and its first token atomically. Without an explicit
-     * preferred_locale, the language of the registration request is used.
+     * Creates the account, its role and its first token atomically. Without an
+     * explicit preferred_locale, the language of the registration request is used.
+     * "account_type" has already been restricted to Role::selfAssignable() by
+     * RegisterRequest; buyer is the default.
      *
      * @param  array<string, mixed>  $data  Validated registration data
      */
@@ -37,6 +40,8 @@ final class AuthenticationService
                 'phone' => isset($data['phone']) ? (string) $data['phone'] : null,
                 'preferred_locale' => (string) ($data['preferred_locale'] ?? App::getLocale()),
             ]);
+
+            $user->assignRole((string) ($data['account_type'] ?? Role::Buyer->value));
 
             return $this->issueToken($user->refresh(), $deviceName);
         });
